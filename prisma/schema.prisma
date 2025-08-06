@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String  @id @default(cuid())
+  email     String  @unique
+  password  String  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  folders   Folder[]
+  files     File[]
+}
+
+model Session {
+  id        String    @id
+  sid       String    @unique
+  data      String  
+  expiresAt DateTime
+}
+
+model Folder{
+  id          String    @id @default(cuid())
+  name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  userId  String
+  user    User    @relation(fields:[userId], references: [id], onDelete: Cascade)
+
+  parentId   String?
+  parent     Folder?  @relation("SubFolders", fields: [parentId], references: [id], onDelete: Cascade)
+  children   Folder[] @relation("SubFolders")
+
+  files File[]
+
+  sharedLinks SharedLink[]
+}
+
+model File {
+  id        String    @id @default(cuid())
+  name      String
+  url       String
+  size      Int
+  mimetype  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  folderId   String
+  folder     Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+}
+
+model SharedLink{
+  id          String    @id @default(cuid())
+  token       String    @unique @default(uuid())
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+
+  folderId    String
+  folder      Folder    @relation(fields: [folderId], references: [id], onDelete: Cascade)
+}
+
