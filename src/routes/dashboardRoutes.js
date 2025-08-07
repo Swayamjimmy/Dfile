@@ -14,4 +14,6 @@ router.get('/folders/:id', dashboardController.renderFolderContents);
 
 router.post('/files', upload.single('fileToUpload'), dashboardController.uploadFile);
 
+router.get('/files/:id/download', dashboardController.downloadFile);
+
 module.exports = router;

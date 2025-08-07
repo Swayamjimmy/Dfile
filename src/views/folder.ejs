@@ -51,18 +51,20 @@
     </form>
     <hr>
 
-    <h2>Files</h2>
-    <div>
-        <% if (folder.files.length === 0) { %>
-            <p>No files here</p>
-        <% } else { %>
-            <% folder.files.forEach(file => { %>
-                <div class="file">
-                    📄 <%= file.name %> 
-                </div>
-            <% }) %>
-        <% } %>
-    </div>
+   <h2>Files</h2>
+<div>
+    <% if (folder.files.length === 0) { %>
+        <p>No files here.</p>
+    <% } else { %>
+        <% folder.files.forEach(file => { %>
+            <div class="file">
+                <a href="/files/<%= file.id %>/download" title="Download file">
+                    📄 <%= file.name %> (<%= (file.size / 1024).toFixed(2) %> KB)
+                </a>
+            </div>
+        <% }) %>
+    <% } %>
+</div>
     
 </body>
 </html>
