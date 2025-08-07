@@ -1,0 +1,17 @@
+<% if (success_msg && success_msg.length > 0) { %>
+    <div style="padding: 10px; margin-bottom: 10px; color: green; background-color: #d4edda;">
+        <%= success_msg %>
+    </div>
+<% } %>
+
+<% if (error_msg && error_msg.length > 0) { %>
+    <div style="padding: 10px; margin-bottom: 10px; color: red; background-color: #f8d7da;">
+        <%= error_msg %>
+    </div>
+<% } %>
+
+<% if (error && error.length > 0) { %>
+    <div style="padding: 10px; margin-bottom: 10px; color: green; background-color: #f8d7da;">
+        <%= success_msg %>
+    </div>
+<% } %>

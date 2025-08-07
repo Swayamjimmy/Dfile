@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .folder { display: inline-block; padding: 10px; border: 1px solid #ccc; margin: 5px;}
+        .folder a { text-decoration: none; color: black;}
+    </style>
+</head>
+<body>
+    <h1>Welcome to your Dashboard, <%= user.email %>!</h1>
+    <p>This is your personal space to dfile! <a href="/logout">Logout</a></p>
+
+    <%- include('_messages') %> <hr>
+    <h3>Create New Folder</h3>
+    <form action="/folders" method="POST">
+        <input type="text" name="folderName" placeholder="Folder Name" required>
+        <button type="submit"> Create Folder</button>
+    </form>
+    <hr>
+
+    <h2>Your Folders</h2>
+    <div>
+        <% if(folders.length === 0) { %>
+            <p>You have no folders yet</p>
+        <% } else { %>
+            <%  folders.forEach(folder => { %>
+                <div class="folder">
+                    <a href="/folders/<%= folder.id %>">📁 <%= folder.name %></a>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+    
+
+</body>
+</html>

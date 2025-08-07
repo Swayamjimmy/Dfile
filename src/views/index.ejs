@@ -10,6 +10,7 @@
     <p>Your Personal cloud storage solution</p>
     <% if(user){ %>
         <p>Hello, <%= user.email %>!</p>
+        <a href="/dashboard">Go to Dashboard</a> |
         <a href="/logout">Logout</a>
     <% } else { %>
         <a href="/login">Login</a> |
