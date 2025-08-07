@@ -38,7 +38,7 @@ const createFolder = async (req, res) => {
     }
 };
 
-// Renders the contents of a single folder
+
 const renderFolderContents = async (req, res) => {
     try {
         const folderId = req.params.id;
@@ -47,6 +47,7 @@ const renderFolderContents = async (req, res) => {
             include: {
                 children: true,
                 files: true,
+                sharedLinks: true,
             },
         });
 
@@ -55,7 +56,14 @@ const renderFolderContents = async (req, res) => {
             return res.redirect('/dashboard');
         }
 
-        res.render('folder', { folder });
+        // --- ADD THIS LINE ---
+        // Create the base URL from the request object
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+
+        // --- UPDATE THIS LINE ---
+        // Pass both 'folder' and the new 'baseUrl' to the template
+        res.render('folder', { folder, baseUrl });
+
     } catch (error) {
         console.error(error);
         res.redirect('/dashboard');
@@ -129,6 +137,49 @@ const downloadFile = async (req, res) => {
         res.redirect('/dashboard');
     }
 };
+const createShareLink = async (req, res) => {
+    const folderId = req.params.id;
+    const { duration } = req.body; // e.g., '1d', '7d', '30d'
+
+    try {
+        // Security Check: Make sure the user owns the folder
+        const folder = await prisma.folder.findUnique({ where: { id: folderId } });
+        if (!folder || folder.userId !== req.user.id) {
+            req.flash('error_msg', 'Folder not found or access denied.');
+            return res.redirect('/dashboard');
+        }
+
+        // Calculate the expiration date
+        const expirationDate = new Date();
+        if (duration === '1d') {
+            expirationDate.setDate(expirationDate.getDate() + 1);
+        } else if (duration === '7d') {
+            expirationDate.setDate(expirationDate.getDate() + 7);
+        } else if (duration === '30d') {
+            expirationDate.setDate(expirationDate.getDate() + 30);
+        } else {
+            req.flash('error_msg', 'Invalid duration specified.');
+            return res.redirect('back');
+        }
+
+        // Create the share link record in the database
+        await prisma.sharedLink.create({
+            data: {
+                folderId: folderId,
+                expiresAt: expirationDate,
+            },
+        });
+
+        req.flash('success_msg', 'Share link created successfully!');
+        res.redirect(`/folders/${folderId}`);
+
+    } catch (error) {
+        console.error(error);
+        req.flash('error_msg', 'Could not create share link.');
+        res.redirect('back');
+    }
+};
+
 
 module.exports = {
     renderDashboard,
@@ -136,4 +187,5 @@ module.exports = {
     renderFolderContents,
     uploadFile,
     downloadFile,
+    createShareLink, // <-- ADD THIS
 };

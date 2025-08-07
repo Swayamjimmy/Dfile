@@ -9,6 +9,7 @@ const prisma = require('./src/db');
 const initializePassport = require('./src/middleware/passport-config');
 const authRoutes = require('./src/routes/authRoutes');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
+const publicRoutes = require('./src/routes/publicRoutes');
 
 initializePassport(passport);
 
@@ -49,6 +50,7 @@ app.use((req,res,next) => {
 
 app.use('/', authRoutes);
 app.use('/', dashboardRoutes);
+app.use('/', publicRoutes);
 
 app.get('/' , (req, res) => {
     res.render('index');

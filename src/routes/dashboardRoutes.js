@@ -16,4 +16,6 @@ router.post('/files', upload.single('fileToUpload'), dashboardController.uploadF
 
 router.get('/files/:id/download', dashboardController.downloadFile);
 
+router.post('/folders/:id/share', dashboardController.createShareLink);
+
 module.exports = router;

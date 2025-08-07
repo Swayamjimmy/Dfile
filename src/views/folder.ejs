@@ -65,6 +65,49 @@
         <% }) %>
     <% } %>
 </div>
+
+<hr>
+<h3>Share this Folder</h3>
+<form action="/folders/<%= folder.id %>/share" method="POST">
+    <label for="duration">Share for:</label>
+    <select name="duration" id="duration">
+        <option value="1d">1 Day</option>
+        <option value="7d">7 Days</option>
+        <option value="30d">30 Days</option>
+    </select>
+    <button type="submit">Generate Share Link</button>
+</form>
     
+</form>
+
+    <% if (folder.sharedLinks && folder.sharedLinks.length > 0) { %>
+        <h4>Active Share Links:</h4>
+        <ul id="share-links-list">
+            <% folder.sharedLinks.forEach(link => { %>
+                <% if (new Date(link.expiresAt) > new Date()) { %>
+                    <li>
+                        <% const fullUrl = `${baseUrl}/share/${link.token}` %>
+                        
+                        <a href="/share/<%= link.token %>" target="_blank"><%= fullUrl %></a>
+                        (Expires: <%= new Date(link.expiresAt).toLocaleString() %>)
+                        
+                        <button onclick="copyToClipboard('<%= fullUrl %>')">Copy</button>
+                    </li>
+                <% } %>
+            <% }) %>
+        </ul>
+    <% } %>
+    <hr>
+
+    <script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Link copied to clipboard!');
+        }, (err) => {
+            alert('Failed to copy link.');
+            console.error('Could not copy text: ', err);
+        });
+    }
+</script>
 </body>
 </html>

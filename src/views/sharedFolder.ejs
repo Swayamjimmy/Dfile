@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Folder: <%= folder.name %></title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .folder, .file { display: inline-block; padding: 10px; border: 1px solid #ccc; margin: 5px; border-radius: 5px; }
+        a { text-decoration: none; color: black; }
+    </style>
+</head>
+<body>
+    <h1>Shared Folder: <%= folder.name %></h1>
+    <p>This is a read-only view of a shared folder.</p>
+    <hr>
+
+    <h2>Sub-folders</h2>
+    <div>
+        <% if (folder.children.length === 0) { %>
+            <p>No sub-folders here.</p>
+        <% } else { %>
+            <p><i>Note: Navigating into sub-folders from a shared link is not supported in this version.</i></p>
+        <% } %>
+    </div>
+
+    <h2>Files</h2>
+    <div>
+        <% if (folder.files.length === 0) { %>
+            <p>No files here.</p>
+        <% } else { %>
+            <% folder.files.forEach(file => { %>
+                <div class="file">
+                    <a href="<%= file.url %>" target="_blank" title="Download file">
+                        📄 <%= file.name %> (<%= (file.size / 1024).toFixed(2) %> KB)
+                    </a>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+</body>
+</html>
