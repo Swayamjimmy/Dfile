@@ -40,6 +40,17 @@
         <% } %>
     </div>
 
+    <hr>
+    <h3>Upload New File to this Folder</h3>
+    <form action="/files" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="folderId" value="<%= folder.id %>">
+        <div>
+            <input type="file" name="fileToUpload" required>
+        </div>
+        <button type="submit">Upload File</button>
+    </form>
+    <hr>
+
     <h2>Files</h2>
     <div>
         <% if (folder.files.length === 0) { %>
