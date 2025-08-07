@@ -16,10 +16,6 @@ router.post('/login', passport.authenticate('local', {
     failureFlash: true
 }));
 
-router.get('/dashboard', isAuthenticated, (req,res) => {
-    res.render('dashboard');
-});
-
 router.get('/logout', authController.logoutUser);
 
 module.exports = router;
